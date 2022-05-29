@@ -5,14 +5,14 @@ from rest_framework import status
 from rest_framework import permissions
 import json
 from datetime import datetime
+from signLanguageConverter.WordClassifier import WordClassifier
 
-# Create your views here.
-
-# src\rest\stock_predictor\model_data\google\google_train.csv
 class SignGroupView(APIView):
 
     def get(self, request):
-        print("Here asdfasdf")
-        return Response({'status': 'working'}, status=status.HTTP_200_OK)
+        statement = request.GET.get('statement', "")
+        wordClassify = WordClassifier(statement)
+        imageNamesArr = wordClassify.fetchImageNames()
+        return Response({'imageNames': imageNamesArr}, status=status.HTTP_200_OK)
     
 
