@@ -15,7 +15,7 @@ class WordClassifier:
         
         res = []
         # try forming statement using words and letters
-        for word in self.statement:
+        for word in self.statement.split(' '):
             if word in WordBag.words:
                 res.append(self.getFName(word))
             else:
