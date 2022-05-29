@@ -1,26 +1,28 @@
 import imp
 from inspect import getfile
 from signLanguageConverter import WordBag
+import string
 class WordClassifier:
     def __init__(self, statement):
         self.statement = statement
-
-    def getFName(self, fName, ext):
-        return  "/assets/images/{}.{}".format(fName, ext)
 
     def fetchImageNames(self):
         res = []
         # check if whole of the statement in wordBag
         if self.statement in WordBag.phrases:
-            return [[self.getFName(self.statement, 'gif')]]
+            return [[WordBag.phrases[self.statement]]]
         
         # try forming statement using words and letters
         for word in self.statement.split(' '):
+            withoutPunc = word.translate(str.maketrans('', '', string.punctuation))
             if word in WordBag.words:
-                res.append([self.getFName(word, 'gif')])
+                res.append([WordBag.words[word]])
+            elif withoutPunc in WordBag.words:
+                res.append([WordBag.words[withoutPunc]])
             else:
                 temp = []
-                for letter in word.upper():
-                    temp.append(self.getFName(letter, 'jpg'))
+                for letter in withoutPunc:
+                    temp.append(WordBag.letters[letter])
                 res.append(temp)
+        print(res)
         return res
