@@ -15,11 +15,16 @@ function Translate() {
     const [note, setNote] = useState(null)
     const [loading, setLoading] = useState(false)
     const [vidArray, setVidArray] = useState([])
+    const [reset, setReset] = useState(false)
     // const [savedNotes, setSavedNotes] = useState([])
 
     useEffect(() => {
         handleListen()
     }, [isListening])
+
+    useEffect(() => {
+        setVidArray([])
+    }, [reset])
 
     const handleListen = () => {
         if (isListening) {
@@ -125,14 +130,19 @@ function Translate() {
         <div className='mt-20 p-12 mb-20'>
             {/* <img src={require('../assets/images/hello.gif').default} alt='aa'></img> */}
             <div className="container w-100">
+                
                 <div className="box flex justify-center">
-                    <button className='bg-purple-800 py-2 px-8 rounded-xl text-white font-bold mr-4' onClick={() => setIsListening(prevState => !prevState)}>
+                    <button className='bg-purple-800 py-2 px-8 rounded-xl text-white font-bold mr-4' onClick={() => {
+                        setIsListening(prevState => !prevState)
+                        setReset(!reset)
+                    }
+                    }>
                         {
                             isListening ? "Stop Recording" : "Start Recording"
                         }
 
                     </button>
-                    {!isListening ? <img src="https://img.icons8.com/external-soft-fill-juicy-fish/60/000000/external-recording-film-making-soft-fill-soft-fill-juicy-fish.png" /> : <img className='animate-pulse' src="https://img.icons8.com/doodle/60/000000/bandicam.png" />}
+                    {!isListening ? <img src="https://img.icons8.com/external-soft-fill-juicy-fish/60/000000/external-recording-film-making-soft-fill-soft-fill-juicy-fish.png" style={{ transform: 'rotate(180deg)' }} /> : <img className='animate-pulse' src="https://img.icons8.com/doodle/60/000000/bandicam.png" />}
                     {/* <button onClick={handleSaveNote} disabled={!note}>
             Save Note
           </button> */}
@@ -151,13 +161,17 @@ function Translate() {
                 <div className=''>
 
                 </div>
-                <div className='mt-4 p-8 border rounded-xl flex flex-wrap '>
-                    {
-                        vidArray.map(vid => (
-                            <img src={vid} className="h-60 w-100 m-4" />
-                        ))
-                    }
-                </div>
+                {
+                    vidArray.length > 0 &&
+
+                    <div className='mt-4 p-8 border rounded-xl flex flex-wrap bg-gray-50 justify-center items-center'>
+                        {
+                            vidArray.map(vid => (
+                                <img src={vid} style={{ width: "400px" }} className="h-60 w-105 max-w-105 max-h-60 rounded-xl border-4 m-4" />
+                            ))
+                        }
+                    </div>
+                }
             </div>
         </div>
     )
