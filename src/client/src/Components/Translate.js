@@ -51,24 +51,43 @@ function Translate() {
         }
     }
 
-    const handleClick = () => {
+    const urlHelper = (arr) => {
+        let newArr = []
+        arr.forEach(element => {
+            let temp = []
+            element.forEach(e => {
+                console.log(e)
+                let u = require(e)
+                temp.push(u)
+            })
+            newArr.push(temp)
+        })
+        return newArr
+    }
+
+    const handleClick = async () => {
         try {
             setIsListening(false)
             setLoading(true)
-            // let res = axios.get(`/signLanguage/?statement${note}`);
+            // let res = axios.get(`/signLanguage/?statement${note.toLowerCase()}`);
             let imagesArr;
             // imagesArr = res.data.imageNames;
-            imagesArr = []
+            imagesArr = [['https://res.cloudinary.com/maharaja-surajmal-institute-of-technology-msit-new-delhi/image/upload/v1653832511/b_to2q7c.jpg', 'https://res.cloudinary.com/maharaja-surajmal-institute-of-technology-msit-new-delhi/image/upload/v1653832411/a_ar3bt4.jpg'], ['https://res.cloudinary.com/maharaja-surajmal-institute-of-technology-msit-new-delhi/image/upload/v1653832548/address_e78aot.gif'], ['https://res.cloudinary.com/maharaja-surajmal-institute-of-technology-msit-new-delhi/image/upload/v1653832411/a_ar3bt4.jpg', 'https://res.cloudinary.com/maharaja-surajmal-institute-of-technology-msit-new-delhi/image/upload/v1653832511/b_to2q7c.jpg']]
+            // imagesArr = urlHelper(imagesArr)
             let arr = []
             if (imagesArr.length == 1) {
                 arr.push(imagesArr[0])
             } else {
                 for (let i = 0; i < imagesArr.length; i++) {
-                    let ext = imagesArr[i].split('.')[1]
-                    if (ext == 'gif') {
-                        arr.push(imagesArr[i])
+                    if (imagesArr[i].length == 1) {
+                        arr.push(imagesArr[i][0])
                     } else {
-                        let img = makeGif(imagesArr[i])
+                        let img = await new Promise((res, rej) => {
+                            let r = makeGif(imagesArr[i])
+                            console.log(r);
+                            res(r)
+                        })
+                        console.log(img)
                         arr.push(img)
                     }
                 }
@@ -82,27 +101,29 @@ function Translate() {
         }
     }
 
-    
-    const makeGif = (images) => {
+
+    const makeGif = async (images) => {
         const options = {
             images: images,
             gifWidth: 500,
             gifHeight: 300,
             numWorkers: 5,
-            frameDuration: 0.01,
+            frameDuration: 2,
             sampleInterval: 10,
         };
-        createGIF(options, obj => {
-            if (!obj.error) {
-                return obj.image;
-            }
-        });
+        return new Promise((res, rej) => {
+            createGIF(options, obj => {
+                if (!obj.error) {
+                    console.log(obj)
+                    res(obj.image)
+                }
+            })
+        })
     }
-    console.log(require('../assets/images/A.jpg').default)
 
     return (
         <div className='mt-20 p-12 mb-20'>
-            <img src={require('../assets/images/A.jpg').default} alt='aa'></img>
+            {/* <img src={require('../assets/images/hello.gif').default} alt='aa'></img> */}
             <div className="container w-100">
                 <div className="box flex justify-center">
                     <button className='bg-purple-800 py-2 px-8 rounded-xl text-white font-bold mr-4' onClick={() => setIsListening(prevState => !prevState)}>
@@ -127,23 +148,16 @@ function Translate() {
                     }
                     </button>
                 </div>
-                <div className='mt-4 p-8 border rounded-xl'>
+                <div className=''>
 
                 </div>
-                <div>
-
+                <div className='mt-4 p-8 border rounded-xl flex flex-wrap '>
+                    {
+                        vidArray.map(vid => (
+                            <img src={vid} className="h-60 w-100 m-4" />
+                        ))
+                    }
                 </div>
-                {/* <div className="box">
-          <h2>Notes</h2>
-          {savedNotes.map(n => (
-            <p key={n}>{n}</p>
-          ))}
-        </div> */}
-                {
-                    vidArray.map(vid => (
-                        <img src={vid} />
-                    ))
-                }
             </div>
         </div>
     )
