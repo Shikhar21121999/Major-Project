@@ -74,11 +74,9 @@ function Translate() {
         try {
             setIsListening(false)
             setLoading(true)
-            // let res = axios.get(`/signLanguage/?statement${note.toLowerCase()}`);
+            let res = await axios.get(`http://localhost:8000/signLanguage/?statement=${note.toLowerCase()}`);
             let imagesArr;
-            // imagesArr = res.data.imageNames;
-            imagesArr = [['https://res.cloudinary.com/maharaja-surajmal-institute-of-technology-msit-new-delhi/image/upload/v1653832511/b_to2q7c.jpg', 'https://res.cloudinary.com/maharaja-surajmal-institute-of-technology-msit-new-delhi/image/upload/v1653832411/a_ar3bt4.jpg'], ['https://res.cloudinary.com/maharaja-surajmal-institute-of-technology-msit-new-delhi/image/upload/v1653832548/address_e78aot.gif'], ['https://res.cloudinary.com/maharaja-surajmal-institute-of-technology-msit-new-delhi/image/upload/v1653832411/a_ar3bt4.jpg', 'https://res.cloudinary.com/maharaja-surajmal-institute-of-technology-msit-new-delhi/image/upload/v1653832511/b_to2q7c.jpg']]
-            // imagesArr = urlHelper(imagesArr)
+            imagesArr = res.data.imageNames;
             let arr = []
             if (imagesArr.length == 1) {
                 arr.push(imagesArr[0])
